@@ -2,14 +2,23 @@
 A collection of modding resources for Half Sword.
 
 ## Engine
-Half Sword (as of the Demo v0.4 or newer, April 2025) is built on Unreal Engine 5.4.4. 
+Half Sword Early Access (as of v0.6 released 31 Jan 2026) is built on Unreal Engine 5.4.4. 
+
+Half Sword Demo v0.4 or Playtest are built on Unreal Engine 5.4.4. 
 
 (The older versions like Demo v0.3 used to be on UE 5.1)
+
+## Save file editing
+The save files are in `%LOCALAPPDATA%\HalfSwordUE5\Saved\SaveGames` (usually meaning `C:\Users\YOUR_USERNAME_HERE\AppData\Local\HalfSwordUE5\Saved\SaveGames`) and the save file is `GameProgress.sav`. Make a copy of that.
+
+The easiest to use is the uesave webpage https://trumank.github.io/uesave/ made by Truman Kilen. Load your `GameProgress.sav` file there, make changes (most of the variables are self-explanatory), download the edited save file, replace the local one with the new one. Again, make sure you have a good backup copy before all that.
 
 ## Modding approaches
 In general, at run time you can inject your code or modify/objects variables in memory, or modify game assets on disk.
 
-For Half Sword, as it is based on Unreal Engine, all of that can be done with ready-made tools (e.g. hooking engines to place hooks over the game's functions, or entire modding frameworks like UE4SS).
+For Half Sword, as it is based on Unreal Engine, all of that can be done with ready-made tools (e.g. hooking engines to place hooks over the game's functions, or entire modding frameworks like UE4SS). 
+
+Most code injection tools place a specially named DLL file (e.g. `dwmapi.dll`) with the tool's functionality in the game's directory right next to `HalfSwordUE5-Win64-Shipping.exe` and that library will be loaded by the operating system into the game process beacuse of that special name. Modifying assets on disk requires unpacking and re-packing them.
 
 For an introduction to UE modding, take a look at this guide by Dmgvol: https://github.com/Dmgvol/UE_Modding
 
@@ -18,13 +27,26 @@ The rest of this document assumes that you are familiar with that, and can alrea
 ## Finding interesting objects in UE
 Note that UE has its own object system that builds on top of C++ object system. Objects contain other objects as members. Some objects are arrays or other collections of objects that you have to access accordingly. 
 
+### Maps (Early Access)
+* Abyss
+* Alley
+* Cellar
+* Forest ("Ambush")
+* Hall ("EastTower)
+* Slums
+* Yard (same as in Playtest)
+* "LordsHall" (final boss map)
+
 ### Map (Demo v0.4)
 * In the Gauntlet mode, the map class name is `Arena_Cutting_Map_C`
 * In the Abyss mode, the map class name is `Abyss_Map_Open_Intermediate_C`
 Find the first instance of this object in memory and you get the current map.
 
+### GI_Settings
+TBD
+
 ### WorldSettings
-This is an UE object that holds interesting settings like the game speed. Find the first instance of the `WorldSettings` class and you have it.
+This is a standard UE object that holds interesting settings like the game speed. Find the first instance of the `WorldSettings` class and you have it.
 * The game speed is `TimeDilation` under `WorldSettings` (this is standard for most UE-based games)
   * If `TimeDilation` is 1.0, then it is normal speed
   * `TimeDilation` < 1.0, means speed is slower, 0.1 = 10x slower
@@ -34,7 +56,10 @@ This is an UE object that holds interesting settings like the game speed. Find t
   * `bWorldGravitySet` is the boolean flag to toggle gravity override if true
   * `WorldGravityZ` is the gravity force, standard is 980.0
 
-### Player character
+### Player character (Early Access)
+TBD 
+
+### Player character (Demo / Playtest)
 * In the Gauntlet mode, the player character is a member of the map object named `Player (Temp)`
 * In the Abyss mode, the player character is a member of the map object named `Player Willie`
 
